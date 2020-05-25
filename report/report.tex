@@ -3,7 +3,7 @@
 \usepackage{float}
 \usepackage[ruled,vlined]{algorithm2e}
 \title{Project 5 \& Project 9 report}
-\author{Xiaolin Zhang \\ 2019xxxxxx xxxxxxx \and Ziyang Xu \\2019xxxxxx xxxxxxx  \and Wangzhihui Mei \\ 2019124044 6603385  \and Xiaohuan Pei \\ 2019124022 6603592}
+\author{Xiaolin Zhang \\ 2019124047 6604080 \and Ziyang Xu \\2019124028 6603452  \and Wangzhihui Mei \\ 2019124044 6603385  \and Xiaohuan Pei \\ 2019124022 6603592}
 \institute{CCNU-UOW JI}
 
 % \version{0.09}
@@ -102,16 +102,16 @@ We calculated the Recall, Precision, Accuracy and F1-score of the model. As this
 So, we can draw the conclusion that Ensemble Model perform well on both micro and marco f1-score.
 
 \subsection{Gradient Boosting Decision Tree}
-Gbdt(Gradient Boosting Decision Tree) is an algorithm that classifies or regresses data by using the additive model (i.e. linear combination of basis functions) and reducing the residual generated in the training process.
+GBDT(Gradient Boosting Decision Tree) is an algorithm that classifies or regresses data by using the additive model (i.e. linear combination of basis functions) and reducing the residual generated in the training process.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{image/gbdt_1}
-	\caption{Training process of gbdt}
+	\caption{Training process of GBDT}
 	\label{gbdt1}
 \end{figure}
 
-Gbdt generates a weak classifier through multiple iterations, each of which is trained on the basis of the residual of the previous one. The requirements for weak classifiers are generally simple enough, with low variance and high deviation. Because the training process is to continuously improve the accuracy of the final classifier by reducing the deviation (which can be proved here).
+GBDT generates a weak classifier through multiple iterations, each of which is trained on the basis of the residual of the previous one. The requirements for weak classifiers are generally simple enough, with low variance and high deviation. Because the training process is to continuously improve the accuracy of the final classifier by reducing the deviation (which can be proved here).
 In general, the weak classifier will choose cart tree. Because of the above high deviation and simple requirements, the depth of each classification regression tree will not be very deep. The final total classifier is the weighted sum of the weak classifiers (that is, the addition model).
 
 
@@ -133,18 +133,113 @@ Initialize $f_0(x) = argmin_c \sum_{i=1}^N L(y_i, x)$\\
 	}
   Then compute $\hat{f(x)} = f_M(x) = \sum_{m=1}^M \sum_{j=1}^J c_{mj}I (x \in R_{mj})$
 }
-\caption{Algorithm of gbdt}
+\caption{Algorithm of GBDT}
 \end{algorithm}
 
-\subsection*{performance}
-The performance of gbdt is measured by Recall, Precision, Accuracy and F1-score.
+\subsection*{Performance}
+The performance of GBDT is measured by Recall, Precision, Accuracy and F1-score.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\textwidth]{image/gbdt_perf.png}
-	\caption{Performance of gbdt}
+	\caption{Performance of GBDT}
 	\label{gbdt1_performance}
 \end{figure}
+
+\section{Project 9}
+\subsection{Dataset: Forest Cover Type Prediction}
+In this project we are asked to predict the forest cover type(the predominant kind of tree cover) from strictly cartographic variables (as opposed to remotely sensed data). The actual forest cover type for a given 30 x 30 meter cell was determined from US Forest Service (USFS) Region 2 Resource Information System data. Independent variables were then derived from data obtained from the US Geological Survey and USFS. The data is in raw form (not scaled) and contains binary columns of data for qualitative independent variables such as wilderness areas and soil type.
+
+The dataset was given by a csv file, consists of 581012 samples, each sample has 55 fields, with the last one as its label. Then the data was splited to 70\% as the training set and 30\% as the testing set.
+
+We explored varies classifiers for this project, including Random Forest, Extremely Randomized Trees, Decision Tree, K-Neighbors (KNN), SVM and Artificial Neuron Network (ANN).
+
+\subsection{Model construction}
+The random forest is the first model we choosed to use. The training process lasts nearly 15 minutes. Luckily, the result looks great with accuracy up to 0.957.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{image/rf.png}
+	\caption{Random forest results}
+	\label{rf}
+\end{figure}
+Besides, we sequence the features influences and draw a diagram of it to better understand the data.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{image/feature importance.jpg}
+	\caption{Feature importance}
+	\label{feature importance}
+\end{figure}
+From the diagram, we can see that Evaluation is the most valuable feature with influence up to 0.25. Paying more attention to this feature when training model may enhance the prediction rate. On the countrary, the last 9 features had no influences on the final classificasion result while the last 10th to 17th features had little influences. Therefore we could consider about deleting these 17 features from the datasets to optimal the model construction and save training time. This is the final data after feature selection. The featues have been extracted from 54 to 37.
+Then the scatters of top-3 features is drawed in Figure  \ref{feature scatters}, we find that these features show great correlation and continuity with Cover\_type, which demonstrate their significance in classification.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\textwidth]{image/scatter.png}
+	\caption{Feature scatters}
+	\label{feature scatters}
+\end{figure}
+
+Then we thought about using the decision tree and knn models. With the help of sklearn library, these can be implemented conveniently. The accuracy for decision tree is 0.9336 while the knn's accuracy is 0.9666, which is slightly higher than decision tree. The result is shown in Figure \ref{dtknn}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{image/dt.png}
+	\includegraphics[width=0.7\textwidth]{image/knn.png}
+	\caption{Decision trees and knn results}
+	\label{dtknn}
+\end{figure}
+The SVM modeled is checked later, while Xiaolin Zhang uses Libsvm and Ziyang Xu uses sklearn. For Libsvm, a python script is developed to convert the original data to the libsvm's format. Libsvm provide a useful tool 'easy.py' in the sub folder "tools" for automatically process the data and search the best parameters. The best c and g its found is 32768 and 0.000122. Using this parameters, we get a accuracy of 86.0929\% in Figure \ref{libsvm}.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.7\textwidth]{image/libsvm.png}
+	\caption{Libsvm results}
+	\label{libsvm}
+\end{figure}
+The sklearn is also used for SVM, but instead we use the GridSearchCV to search the best parameters C. There are 4 C candidates and 3 fold crossvalidation is used, thus total 12 model is tested, takes about half an hour. Figure \ref{gridsearch} shows that 100 is the best.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1\textwidth]{image/image-20200523231303921.png}
+	\caption{Gridsearch}
+	\label{gridsearch}
+\end{figure}
+Using the c=100 to train the svm, we get the accuracy of 99.98\%.
+
+Then, we used tendorflow as toolbox to consrtruct and train an artificial neuron network as classifier. Considering of the gigantic features size (54), we decided to build a deep learning network with more than 2 hidden layers to acquire better performance. After several combinations and tries, we found a structure showing relatively superior performance, which has 4 hidden layers with 50 , 80 , 80 neurons respectively on each layer and relu as activation function. Besides, a dropout layer is introduced to randomly inactivate neurons to avoid overfitting.
+The training process lasted for nearly 5 minutes and the testing accuracy reached to 0.7973. To better observe the training process, pyplot is used to draw diagrams in Figure \ref{train} of accuracy and loss trends. The loss remains still as the training goes, thus we believe it has converged.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{image/train.png}
+	\caption{Train process}
+	\label{train}
+\end{figure}
+
+Finally, Extremely Randomized Trees Classifier(Extra Trees Classifier) is tested. It is a type of ensemble learning technique which aggregates the results of multiple de-correlated decision trees collected in a “forest” to output it’s classification result. In concept, it is very similar to a Random Forest Classifier and only differs from it in the manner of construction of the decision trees in the forest.
+Gridsearch is also used to identify the best parameters. It turns out that $max\_depth:10$, $max\_features:0.3$ and $n\_estimators:100$ is a good choice. Then we build a ExtraTree based on these parameter, get the 100\% accuracy on testset. The result is shown in Figure \ref{extra}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\textwidth]{image/image-20200523235825150.png}
+	\caption{ExtraTree results}
+	\label{extra}
+\end{figure}
+
+All the classifier used in project 9 along with their results is shown in the Table \ref{tab:my_label}:
+
+\begin{table}[]
+    \centering
+    \begin{tabular}{ccc}
+\toprule
+Model&Accuracy\\
+\midrule
+Random Forest&0.9568\\
+Decision Tree&0.9336\\
+KNN&0.9666\\
+SVM&0.9998\\
+ANN&0.7973\\
+ExtraTree&1.0\\
+\bottomrule
+\end{tabular}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{table}
+
 
 \bibliography{wpref}
 \end{document}
