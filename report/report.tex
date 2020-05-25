@@ -1,5 +1,5 @@
 
-\documentclass[11pt,en,cite=authoryear]{elegantpaper}
+\documentclass[11pt,en]{elegantpaper}
 \usepackage{float}
 \usepackage[ruled,vlined]{algorithm2e}
 \title{Project 5 \& Project 9 report}
@@ -75,8 +75,7 @@ We got 6000 training data from the primitive dataset. We shuffled them and use 7
 \end{figure}
 
 
-\subsection{Model construction}
-\subsubsection{Ensembling Model}
+\subsection{Ensembling Model}
 Ensemble modeling is a process where multiple diverse models are created to predict an outcome, either by using many different modeling algorithms or using different training data sets. The ensemble model then aggregates the prediction of each base model and results in once final prediction for the unseen data. The motivation for using ensemble models is to reduce the generalization error of the prediction. As long as the base models are diverse and independent, the prediction error of the model decreases when the ensemble approach is used. The approach seeks the wisdom of crowds in making a prediction. Even though the ensemble model has multiple base models within the model, it acts and performs as a single model. Most of the practical data mining solutions utilize ensemble modeling techniques. Chapter 4 Classification covers the approaches of different ensemble modeling techniques and their implementation in detail.
 
 In this task, We applied Voting method. Voting is a combination strategy for classification problems in integrated learning. The basic idea is to select the most output class among all machine learning algorithms.
@@ -103,8 +102,6 @@ We calculated the Recall, Precision, Accuracy and F1-score of the model. As this
 So, we can draw the conclusion that Ensemble Model perform well on both micro and marco f1-score.
 
 \subsection{Gradient Boosting Decision Tree}
-
-\subsubsection{model}
 Gbdt(Gradient Boosting Decision Tree) is an algorithm that classifies or regresses data by using the additive model (i.e. linear combination of basis functions) and reducing the residual generated in the training process.
 
 \begin{figure}[H]
@@ -139,7 +136,7 @@ Initialize $f_0(x) = argmin_c \sum_{i=1}^N L(y_i, x)$\\
 \caption{Algorithm of gbdt}
 \end{algorithm}
 
-\subsubsection{performance}
+\subsection*{performance}
 The performance of gbdt is measured by Recall, Precision, Accuracy and F1-score.
 
 \begin{figure}[H]
